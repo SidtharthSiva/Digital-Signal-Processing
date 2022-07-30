@@ -1,0 +1,53 @@
+%Lowpass filter
+clc; clear all; close all;
+f1=input('Enter the input frequency for the first signal ='); f2=input('Enter the input frequency for the second signal ='); fs=input('Enter the sampling frequency =');
+fc=input('Enter the cutoff frequency ='); t=0:300;
+
+c1=sin(2*pi*t*(f1/fs)); c2=sin(2*pi*t*(f2/fs)); c=c1+c2; subplot(221);
+plot(t,c);
+xlabel('time'); ylabel('amplitude');
+
+ 
+title('input signal'); f=abs(fft(c,1024)); for i=1:512 freq(i)=(i/1024)*fs; end
+subplot(222); plot(freq,f(1:512));
+xlabel('freq'); ylabel('amplitude'); title('fft of input signal');
+
+%lpf butterworth w=0:.001:pi;
+[Bl1,Al1]=butter(5,((2*fc)/fs)); p3=freqz(Bl1,Al1,w);
+figure; subplot(221); plot((w/pi),abs(p3));
+title('butterworth lpf magnitude response'); xlabel('normalized freq'); ylabel('amplitude');
+phas=angle(p3); phas_unwrapped=unwrap(phas); subplot(222); plot((w/pi),phas_unwrapped); title('butterworth lpf phase response'); xlabel('normalized freq'); ylabel('phase');
+
+l=filter(Bl1,Al1,c); l1=abs(fft(l,1024)); subplot(223); plot(freq,l1(1:512));
+xlabel('freq'); ylabel('amplitude');
+title('fft of lpf output through butterworth');
+
+% lpf chebyshev type 1 w=0:.001:pi;
+[BL,AL]=cheby1(5,5,(fc/fs)); p3=freqz(BL,AL,w);
+figure; subplot(221);
+
+ 
+plot((w/pi),abs(p3));
+title('chebyshev type 1 lpf magnitude response'); xlabel('normalized freq');
+ylabel('amplitude'); phas=angle(p3); phas_unwrapped=unwrap(phas); subplot(222); plot((w/pi),phas_unwrapped);
+title('chebyshev type 1 lpf phase response'); xlabel('normalized freq');
+ylabel('phase');
+
+a=filter(BL,AL,c); a1=abs(fft(a,1024)); subplot(223); plot(freq,a1(1:512));
+xlabel('freq'); ylabel('amplitude');
+title('fft of lpf output through chebyshev type 1');
+
+% lpf chebyshev type 2 w=0:.001:pi;
+[BL2,AL2]=cheby2(5,15,(fc/fs)); p5=freqz(BL2,AL2,w);
+figure; subplot(221); plot((w/pi),abs(p5));
+title('chebyshev type 2 lpf magnitude response'); xlabel('normalized freq');
+ylabel('amplitude'); phas=angle(p5); phas_unwrapped=unwrap(phas); subplot(222); plot((w/pi),phas_unwrapped);
+title('chebyshev type 2 lpf phase response'); xlabel('normalized freq');
+ylabel('phase');
+
+b=filter(BL2,AL2,c); b1=abs(fft(b,1024)); subplot(223); plot(freq,b1(1:512));
+xlabel('freq');
+
+ 
+ylabel('amplitude');
+title('fft of lpf output through chebyshev type 2');
