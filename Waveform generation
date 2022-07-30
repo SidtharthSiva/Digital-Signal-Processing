@@ -1,0 +1,38 @@
+%Waveform generation
+
+#include<stdio.h> #include<math.h> float a[500];
+float b[500]; float c[500]; float d[500]; void main()
+{
+int i=0,j=0;
+
+//sine wave for(i=0;i<500;i++) a[i]=sin(2*3.14*10000*i);
+
+//square wave for(i=0;i<500;){ for(j=0;j<10;j++) { b[j]=1;
+b[i]=b[j]; i++;
+
+ 
+}
+for(j=10;j<20;j++){ b[j]=-1;
+b[i]=b[j]; i++;}
+}
+
+//ramp wave for(i=0;i<200;){ for(j=0;j<10;j++){ c[j]=((2*j)-10);
+c[i]=c[j]; i++;
+}
+}
+
+//triangular wave for(i=0;i<200;)
+{
+for(j=0;j<10;j++)
+{
+d[i]=((2*j)-10);
+d[i]=d[j]; i++;
+}
+for(j=10;j<20;j++)
+{
+d[j]=(30-(2*j));
+d[i]=d[j]; i++;
+}
+}
+}
+
