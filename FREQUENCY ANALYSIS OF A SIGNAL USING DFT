@@ -1,0 +1,28 @@
+t=0:0.01:5; f1=4; f2=1;
+x=sin(2*pi*f1*t); subplot(321); plot(t,x);
+xlabel('time');
+ylabel('amp'); title('signal1'); a1=abs(fft(x,1024)); for i=1:512
+freq1(i)=(i/1024)*100; end
+subplot(322); plot(freq1,a1(1:512));
+xlabel('freq');
+ylabel('amp');
+title('fft(x)'); y=sin(2*pi*f2*t); subplot(323); plot(t,y);
+xlabel('time');
+ylabel('amp'); title('signal2'); a2=abs(fft(y,1024)); for i=1:512
+freq2(i)=(i/1024)*100; end
+subplot(324); plot(freq2,a2(1:512));
+xlabel('freq');
+ylabel('amp');
+title('fft(y)'); z=x+y; subplot(325); plot(t,z);
+xlabel('time');
+ylabel('amp'); title('added signal');
+
+
+ 
+a3=abs(fft(z,1024)); for i=1:512
+freq(i)=(i/1024)*100; end
+subplot(326); plot(freq,a3(1:512));
+xlabel('freq');
+ylabel('amp');
+title('fft(z)');
+
