@@ -1,0 +1,57 @@
+clc; clear all; close all;
+fp1=4000; fs1=6000; fp2=10000; fs2=8000;
+fsamp=22000; rp=3;
+rs=45; wp1=2*fp1/fsamp; wp2=2*fp2/fsamp; ws1=2*fs1/fsamp; ws2=2*fs2/fsamp; wp=[wp1 wp2]; ws=[ws1 ws2]; t=0:1/fsamp:0.01;
+x=sin(2*pi*1000*t)+sin(2*pi*3000*t)+sin(2*pi*5000*t);
+
+
+ 
+%butterworth [n,wn]=buttord(wp,ws,rp,rs);
+[b,a]=butter(n,wn,'stop'); h=freqz(b,a,512); ha=20*log10(abs(h(1:512))); hp=20*log10(angle(h(1:512))); y=filter(b,a,x);
+
+figure; subplot(211); plot(t,x);
+xlabel('time'); ylabel('amplitude'); title('input signal'); for i=1:1024
+freq(i)=(i/1024)*fsamp;
+end xf=(fft(x,1024)); subplot(212);
+plot(freq(1:512),abs(xf(1:512))); xlabel('freq'); ylabel('amplitude');
+title('fft of input signal');
+
+figure; subplot(221);
+plot(freq(1:512),ha(1:512)); title('butterworth bsf magnitude response'); xlabel('normalized freq'); ylabel('amplitude');
+subplot(222); plot(freq(1:512),hp(1:512)); title('butterworth bsf phase response'); xlabel('normalized freq'); ylabel('phase');
+yf=(fft(y,1024)); subplot(223);
+plot(freq(1:512),abs(yf(1:512))); xlabel('freq'); ylabel('amplitude');
+title('fft of bsf output through butterworth');
+
+
+ 
+%cheby1 [n1,wn1]=cheb1ord(wp,ws,rp,rs); [b1,a1]=cheby1(n1,rp,wn1,'stop'); h1=freqz(b1,a1,512); ha1=20*log10(abs(h1(1:512))); hp1=20*log10(angle(h1(1:512))); y1=filter(b1,a1,x);
+for i=1:512 freq(i)=(i/1024)*fsamp; end
+
+figure; subplot(221);
+plot(freq(1:512),ha1(1:512));
+title('chebyshev type 1 bsf magnitude response'); xlabel('normalized freq');
+ylabel('amplitude'); subplot(222); plot(freq(1:512),hp1(1:512));
+title('chebyshev type 1 bsf phase response'); xlabel('normalized freq');
+ylabel('phase');
+yf1=(fft(y1,1024)); subplot(223);
+plot(freq(1:512),abs(yf1(1:512))); xlabel('freq');
+ylabel('amplitude');
+title('fft of bsf output through chebyshev type 1');
+
+
+%cheby2 [n2,wn2]=cheb2ord(wp,ws,rp,rs); [b2,a2]=cheby2(n2,rp,wn2,'stop'); h2=freqz(b2,a2,512); ha2=20*log10(abs(h2(1:512))); hp2=20*log10(angle(h2(1:512))); y2=filter(b2,a2,x);
+for i=1:512 freq(i)=(i/1024)*fsamp; end
+
+figure; subplot(221);
+
+ 
+plot(freq(1:512),ha2(1:512));
+title('chebyshev type 2 bsf magnitude response'); xlabel('normalized freq');
+ylabel('amplitude'); subplot(222); plot(freq(1:512),hp2(1:512));
+title('chebyshev type 2 bsf phase response'); xlabel('normalized freq');
+ylabel('phase');
+yf1=(fft(y2,1024)); subplot(223);
+plot(freq(1:512),abs(yf1(1:512))); xlabel('freq');
+ylabel('amplitude');
+title('fft of bsf output through chebyshev type 2');
