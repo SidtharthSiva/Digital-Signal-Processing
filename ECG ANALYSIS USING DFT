@@ -1,0 +1,14 @@
+clc close all
+[filename, pathname] = uigetfile('*.dat', 'Open file .dat');% only image Bitmap if isequal(filename, 0) || isequal(pathname, 0)
+disp('File input canceled.'); ECG_Data = [];
+else fid=fopen(filename,'r'); end
+time=10; f=fread(fid,2*360*time,'ubit12'); Orig_Sig=f(1:2:length(f));
+
+fs=length(Orig_Sig)/time; %samples in one second dt=1/fs; %time between each sample
+t=0:dt:time-dt; figure; subplot(311) plot(t,Orig_Sig) title("ECG signal");
+xlabel("Time(seconds)"); ylabel("Magnitude"); noise=0.5*20*sin(2*pi*50*t); noisyecg=Orig_Sig+noise'; subplot(312)
+plot(t,noisyecg);
+title("ECG signal with noise"); xlabel("Time(seconds)"); ylabel("Magnitude"); necgf=fftshift(fft(noisyecg)); df=fs/length(t);
+f=-fs/2:df:fs/2-df; subplot(313) plot(f,abs(necgf)/length(t)); title("Frequency spectrum"); xlabel("Frequency(Hz)"); ylabel("Magnitude"); ylim([0 10]);
+xlim([0 70]);
+
