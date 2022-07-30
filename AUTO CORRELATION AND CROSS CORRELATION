@@ -1,0 +1,60 @@
+%Correlation
+
+% auto correlation of periodic signal a=6;
+w=30*pi; phi=pi/6; t=0:.01:1;
+x=a*sin(w*t+phi); subplot(441); plot(x);
+axis tight; title('periodic signal'); xlabel('time'); ylabel('amplitude');
+
+y=xcorr(x); subplot(442); plot(y);
+axis tight;
+title('autocorrelation of periodic signal'); xlabel('time');
+ylabel('amplitude');
+
+% auto correlation of aperiodic signal x=randn(1,100);
+subplot(445); plot(x);
+axis tight; title('aperiodic signal'); xlabel('time'); ylabel('amplitude');
+
+y=xcorr(x); subplot(446); plot(y);
+axis tight;
+title ('autocorrelation of aperiodic signal'); xlabel('time');
+
+ 
+ylabel('amplitude');
+
+% auto correlation of periodic signal added with noise t=0:.01:100;
+f=600; fs=1500;
+x=sin(2*pi*(f/fs)*t); subplot(449); plot(x);
+axis tight; title('periodic signal'); xlabel('time'); ylabel('amplitude');
+
+y=randn(1,length(x-1));
+subplot(4,4,10); plot(y);
+axis tight; title('noise');
+xlabel('time'); ylabel('amplitude');
+
+z=x+y; subplot(4,4,11); plot(z);
+axis tight;
+title('added periodic and noise'); xlabel('time'); ylabel('amplitude');
+
+xz=xcorr(z); subplot(4,4,12); plot(xz);
+axis tight;
+title('autocorrelation of periodic signal with noise'); xlabel('time');
+ylabel('amplitude');
+
+% cross correlation of two periodic signal t=0:.01:100;
+f=600; fs=1500;
+x=sin(2*pi*(f/fs)*t); subplot(4,4,13); plot(x);
+axis tight;
+title('periodic signal sine'); xlabel('time'); ylabel('amplitude');
+
+
+ 
+t=0:.01:100; f=600; fs=1500;
+y=cos(2*pi*(f/fs)*t); subplot(4,4,14); plot(y);
+axis tight;
+title('periodic signal cosine'); xlabel('time'); ylabel('amplitude');
+
+z=xcorr(x,y);
+subplot(4,4,15); plot(z);
+axis tight;
+title('cross correlation of two periodic signal'); xlabel('time');
+ylabel('amplitude');
