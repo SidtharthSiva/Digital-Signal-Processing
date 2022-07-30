@@ -1,0 +1,70 @@
+%IIR filter
+#include "Configuration1cfg.h" #include "dsk6713.h"
+#include "dsk6713_aic23.h"
+
+/*float filter_Coeff[]={-0.0157524150924022,-0.0238685132826490,- 0.0181758635681563,1.02306744372008e-17, .0214805660350939, 0.0334159185957086
+0.0262540251540036, -1.02306744372008e-17, -0.0337551751980046, -
+0.0556931976595143, -0.0472572452772064, 1.02306744372008e-17,
+0.0787620754620107, 0.167079592978543, 0.236286226386032, 0.262448010933082,
+0.236286226386032, 0.167079592978543, 0.0787620754620107, 1.02306744372008e-17, -
+0.0472572452772064, -0.0556931976595143, -0.0337551751980046, -
+
+ 
+1.02306744372008e-17, 0.0262540251540036,	0.0334159185957086,
+0.0214805660350939, 1.02306744372008e-17, -0.0181758635681563,-
+0.0238685132826490,-0.0157524150924022};*/
+const signed intfilter_Coeff[]=
+{
+//12730,-12730,12730,2767,-18324,21137 /*HP 2500 */
+//312,312,312,32767,-27943,24367 /*LP 800 */ 1455,1455,1455,32767,-23140,21735 /* LP 2500 */
+//9268,-9268,9268,32767,-7395,18367 /*HP 4000 */
+//7215,-7215,7215,32767,5039,6171, /* HP 7000 */
+};
+
+DSK6713_AIC23_Config config={ 0x0017,
+0x0017,
+0x00d8,
+0x00d8,
+0x0011,
+0x0000,
+0x0000,
+0x0043,
+0x0081,
+0x0001
+};
+
+void main()
+{
+DSK6713_AIC23_CodecHandle hCodec; intl_input, r_input, l_output, r_output;
+
+DSK6713_init();
+hCodec = DSK6713_AIC23_openCodec(0,&config); DSK6713_AIC23_setFreq(hCodec,3);
+while(1) {
+while (!DSK6713_AIC23_read(hCodec,&l_input)); while (!DSK6713_AIC23_read(hCodec,&r_input)); l_output = IIR_FILTER(&filter_Coeff,l_input); r_output = l_output; while(!DSK6713_AIC23_write(hCodec,l_output)); while(!DSK6713_AIC23_write(hCodec,r_output));
+}
+DSK6713_AIC23_closeCodec(hCodec);
+}
+signedint IIR_FILTER(const signed int *h,signedint x1)
+{
+static signed int x[6]={0,0,0,0,0,0}; static signed int y[6]= {0,0,0,0,0,0}; int temp=0;
+temp =(short int)x1; x[0]=(signed int) temp;
+
+ 
+temp = ( (int)h[0]*x[0]);
+temp += ( (int)h[1]*x[1]);
+temp += ( (int)h[1]*x[1]);
+temp += ( (int)h[2]*x[2]);
+temp -= ( (int)h[4]*y[1]);
+temp -= ( (int)h[4]*y[1]);
+temp -= ( (int)h[5]*y[2]); temp>>=15;
+if(temp>32767){ temp=32767;
+}
+else if (temp<-32767){ temp = -32767;
+}
+y[0]=temp; y[2]=y[1];
+y[1]=y[0];
+x[2]=x[1];
+x[1]=x[0];
+return (temp<<2);
+}
+
