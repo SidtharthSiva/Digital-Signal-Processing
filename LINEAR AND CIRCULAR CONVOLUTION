@@ -22,3 +22,19 @@ subplot(337); stem (y);
 title ('convolved sequence'); xlabel ('samples');
 ylabel ('Amplitude');
 
+
+%Circular Convolution x=input('Enter the array of x '); h=input('Enter the array of h '); n1=length(x);
+n2=length(h); if n1>=n2 L=n1;
+else L=n2;
+end
+x1=[x zeros(1,(L-n1))];
+h1=[h zeros(1,(L-n2))]; for m=1:L
+for n=1:L if n>m
+H(m,n)=h1(L+m-n+1);
+else
+H(m,n)=h1(m-n+1);
+end end end
+disp (H);
+y= (H*x1');
+disp(y);
+
